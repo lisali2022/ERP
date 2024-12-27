@@ -1,0 +1,9 @@
+﻿@page "/"
+
+<h2>Index</h2>
+
+
+@inject IHttpContextAccessor Accessor
+
+
+用户名：@Accessor?.HttpContext?.User?.Identity?.Name

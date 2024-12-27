@@ -1,0 +1,108 @@
+﻿@page "/tkgrid"
+@using Blazor.Shared.Models
+@using Blazor.Shared.Services
+@using BootstrapBlazor.OnlyServer.Services
+@using Telerik.Blazor.Services
+@using BootstrapBlazor.OnlyServer.Resources
+@inject WeatherForecastService ForecastService
+@inject ITelerikStringLocalizer LocalizerTk
+@* This is the namespace that is generated from the resx files localizer *@
+<PageTitle>@LocalizerTk[nameof(TelerikMessages.Base_TelerikGridDemo)] </PageTitle>
+<TelerikRootComponent> 
+    <TelerikMediaQuery Media="(min-width: 768px)" OnChange="@(mq => IsLargeDevice = mq)"></TelerikMediaQuery>
+    <TelerikGridLayout ColumnSpacing="2em">
+        <GridLayoutColumns>
+            @if (IsLargeDevice)
+            {
+                <GridLayoutColumn Width="8fr" />
+                <GridLayoutColumn Width="4fr" />
+            }
+            else
+            {
+                <GridLayoutColumn Width="1fr" />
+            }
+        </GridLayoutColumns>
+        <GridLayoutItems>
+            <GridLayoutItem>
+                <TelerikGrid Data="@forecasts" FilterMode="@GridFilterMode.FilterMenu"
+                             Sortable="true" Pageable="true" PageSize="20" Groupable="true" Resizable="true" Reorderable="true"
+                             OnUpdate="@UpdateHandler" OnDelete="@DeleteHandler" OnCreate="@CreateHandler" EditMode="@GridEditMode.Inline">
+                    <GridColumns>
+
+                        <GridColumn Field="Id" Title="Id" Width="100px" Editable="false" Groupable="false" />
+
+                        <GridColumn Field="Date" Title="@LocalizerTk[nameof(TelerikMessages.Base_Date)]" Width="220px" DisplayFormat="{0:dddd, dd MMM yyyy}" />
+
+                        <GridColumn Field="TemperatureC" Title="Temp. C" DisplayFormat="{0:N1}" />
+
+                        <GridColumn Field="TemperatureF" Title="Temp. F" DisplayFormat="{0:N1}" />
+
+                        <GridColumn Field="Summary" />
+
+                        <GridCommandColumn Width="200px" Resizable="false">
+                            <GridCommandButton Command="Save" Icon="@Telerik.SvgIcons.SvgIcon.Save" ShowInEdit="true">
+                                @LocalizerTk[nameof(TelerikMessages.Grid_Update)]
+                            </GridCommandButton>
+
+                            <GridCommandButton Command="Edit" Icon="@Telerik.SvgIcons.SvgIcon.Pencil" ThemeColor="@ThemeConstants.Button.ThemeColor.Primary">
+                                @LocalizerTk[nameof(TelerikMessages.Grid_Edit)]
+                            </GridCommandButton>
+
+                            <GridCommandButton Command="Delete" Icon="@Telerik.SvgIcons.SvgIcon.Trash">
+                                @LocalizerTk[nameof(TelerikMessages.Grid_Delete)]
+                            </GridCommandButton>
+
+                            <GridCommandButton Command="Cancel" Icon="@Telerik.SvgIcons.SvgIcon.Cancel" ShowInEdit="true">
+                                @LocalizerTk[nameof(TelerikMessages.Grid_Cancel)]
+                            </GridCommandButton>
+
+                        </GridCommandColumn>
+
+                    </GridColumns>
+
+                    <GridToolBarTemplate>
+                        <GridCommandButton Command="Add" Icon="@Telerik.SvgIcons.SvgIcon.Plus" ThemeColor="@ThemeConstants.Button.ThemeColor.Primary">@LocalizerTk[nameof(TelerikMessages.Grid_Create)]</GridCommandButton>
+                        <GridCommandButton Command="ExcelExport" Icon="@Telerik.SvgIcons.SvgIcon.FileExcel">@LocalizerTk[nameof(TelerikMessages.Grid_ExcelExport)]</GridCommandButton>
+                    </GridToolBarTemplate>
+                    <GridExport>
+                        <GridExcelExport FileName="weather-forecasts" AllPages="true" />
+                    </GridExport>
+                </TelerikGrid>
+            </GridLayoutItem>
+        </GridLayoutItems>
+    </TelerikGridLayout>
+</TelerikRootComponent>
+@code {
+    List<WeatherForecast>? forecasts { get; set; }
+    bool IsLargeDevice = true;
+    protected override async Task OnInitializedAsync()
+    {
+        await GetForecasts();
+    }
+
+    async Task GetForecasts()
+    {
+        forecasts = await ForecastService.GetForecastListAsync(DateTime.Now);
+    }
+
+    public async Task DeleteHandler(GridCommandEventArgs args)
+    {
+        WeatherForecast currItem = (WeatherForecast)args.Item;
+        await ForecastService.DeleteForecastAsync(currItem);
+        await GetForecasts();
+    }
+
+    public async Task CreateHandler(GridCommandEventArgs args)
+    {
+        WeatherForecast currItem = (WeatherForecast)args.Item;
+        await ForecastService.InsertForecastAsync(currItem);
+        await GetForecasts();
+    }
+
+    public async Task UpdateHandler(GridCommandEventArgs args)
+    {
+        WeatherForecast currItem = (WeatherForecast)args.Item;
+        await ForecastService.UpdateForecastAsync(currItem);
+        await GetForecasts();
+    }
+}

@@ -1,0 +1,17 @@
+﻿// Copyright (c) Argo Zhang (argo@163.com). All rights reserved.
+// Licensed under the Apache License, Version 2.0. See License.txt in the project root for license information.
+// Website: https://www.blazor.zone or https://argozhang.github.io/
+
+namespace BootstrapBlazor.Components;
+
+/// <summary>
+/// ISelect 接口
+/// </summary>
+public interface ISelect
+{
+    /// <summary>
+    /// 增加 SelectedItem 项方法
+    /// </summary>
+    /// <param name="item"></param>
+    void Add(SelectedItem item);
+}

@@ -1,0 +1,38 @@
+﻿@page "/"
+@attribute [TabItemOption(Text = "首页", Closable = false)]
+<PageTitle>首页</PageTitle>
+
+<div class="container">
+    <div class="p-5 text-center">
+        @*
+        <Blazorise.Badge Color="Blazorise.Color.Success" class="mb-4">
+            <h5 class="m-1"> <i class="fas fa-rocket"></i> @L["Congratulations"], <strong>@L["ZcERP"]</strong> @L["is successfully running"]!</h5>
+        </Blazorise.Badge>
+     <h1>@L["ZhiChuang Info Tech Co., LTD"]</h1>
+        <p class="lead px-lg-5 mx-lg-5">@L["LongWelcomeMessage"]</p>
+       *@
+        <ul class="culture">
+            <li class="title1">企业文化：</li>
+            <li class="title2">公司质量方针：第一次要把工作做对，继以不断改进，达到和超越客户要求</li>
+            <li class ="title2">公司质量目标：</li>
+            <li class ="title3">1）产品出货合格率≥98%/每月</li>
+            <li class="title3">2）准时交货率≥95%/每月</li>
+            <li class="title3">3）顾客满意度≥95分/每年。</li>
+            <li class="title2">公司使命：推动行业进步；追求员工和客户的共同幸福</li>
+            <li class="title2">公司价值观：厚德载物 天道酬勤 饮水思源</li>
+            <li class="title3">1）产品出货合格率≥98%/每月</li>
+            <li class="title3"> 2）准时交货率≥95%/每月</li>
+            <li class="title3"> 3）顾客满意度≥95分/每年。</li>
+            <li class="title2">公司使命：推动行业进步；追求员工和客户的共同幸福</li>
+            <li class="title2">公司价值观：厚德载物 天道酬勤 饮水思源</li>
+        </ul>
+@*        @if (!CurrentUser.IsAuthenticated)
+        {
+            <a class="btn btn-primary" href="Account/Login"><i class="fa fa-sign-in"></i> @L["Login"]</a>
+        }
+        else
+        {
+            <a class="btn btn-primary" href="Account/Login"><i class="fa fa-sign-in"></i> @L["Logout"]</a>
+        }  *@     
+    </div>
+</div>

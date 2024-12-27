@@ -1,0 +1,19 @@
+﻿@page "/table/tree"
+@using Blazor.Shared.Models
+@using BootstrapBlazor.OnlyServer.Components.Pages.Demo.TbDemo
+@inherits BootstrapComponentBase
+@inject IStringLocalizer<TablesTree> Localizer
+@inject IStringLocalizer<Foo> LocalizerFoo
+@inject ICacheManager CacheManager
+<h4>@Localizer["TablesTreeDescription"]</h4>
+<Table TItem="TreeFoo" IsBordered="true" IsStriped="true"
+        Items="@TreeItems" IsTree="true" TreeNodeConverter="@TreeNodeConverter" OnTreeExpand="@OnTreeExpand">
+    <TableColumns>
+        <TableColumn @bind-Field="@context.Name" Width="360" />
+        <TableColumn @bind-Field="@context.DateTime" Width="180" />
+        <TableColumn @bind-Field="@context.Address" />
+        <TableColumn @bind-Field="@context.Count" />
+    </TableColumns>
+</Table>
+
+

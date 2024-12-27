@@ -1,0 +1,22 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <base href="/" />
+    <link rel="stylesheet" href="bootstrap/bootstrap.min.css" />
+    <link rel="stylesheet" href="app.css" />
+    <link rel="stylesheet" href="BlazorApp.styles.css" />
+    <link rel="icon" type="image/png" href="favicon.png" />
+   @*  是一个特定于Blazor或某个特定框架的组件，用于在<head>部分的末尾动态插入额外的内容，如脚本或样式表。这不是标准的HTML元素，而是由Blazor或相关框架提供的组件。 *@
+    <HeadOutlet />
+</head>
+
+<body>
+    @* 这是一个Blazor组件，用于定义应用程序的路由。它决定了根据当前URL应该渲染哪个组件。 *@
+    <Routes />
+    <script src="_framework/blazor.web.js"></script>
+</body>
+
+</html>

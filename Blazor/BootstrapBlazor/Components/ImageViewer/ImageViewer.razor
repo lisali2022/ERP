@@ -1,0 +1,36 @@
+﻿@namespace BootstrapBlazor.Components
+@inherits BootstrapModuleComponentBase
+@attribute [BootstrapModuleAutoLoader]
+
+<div @attributes="AdditionalAttributes" class="@ClassString" id="@Id" data-bb-previewer-id="@PreviewerId" data-bb-async="@IsAsyncString">
+    @if (ShowImage)
+    {
+        @RenderChildContent()
+    }
+    else if (ShouldRenderPlaceHolder)
+    {
+        @PlaceHolderTemplate
+    }
+
+    @if (ShowPreviewList)
+    {
+        <ImagePreviewer Id="@PreviewerId" ZIndex="@ZIndex" PreviewList="PreviewList" />
+    }
+</div>
+
+@code {
+    Microsoft.AspNetCore.Components.RenderFragment RenderErrorTemplate() =>
+    @<div class="bb-img-holder bb-img-error">
+        <div class="bb-img-loading">
+            <i class="@FileIcon"></i>
+        </div>
+    </div>;
+
+    Microsoft.AspNetCore.Components.RenderFragment RenderPlaceHolder() =>
+    @<div class="bb-img-holder">
+        <div class="bb-img-loading">
+            <Spinner Color="Color.Primary" />
+        </div>
+    </div>;
+}
+

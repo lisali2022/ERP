@@ -1,0 +1,21 @@
+﻿@page "/"
+@model IndexModel
+@{
+    ViewData["Title"] = "Home page";
+}
+<h3>首页</h3>
+
+
+@if (User.Identity is not null && User.Identity.IsAuthenticated)
+{
+    <h3>用户名： @User.Identity?.Name</h3>
+    <a class="btn btn-primary ms-3" href="/signout">登出</a>
+}
+else
+{
+    <form asp-page="/" method="post" >
+        <input asp-for="UserName" placeholder="用户名"/>
+        <br />
+        <button class="btn btn-primary" type="submit">登录</button>
+    </form>
+}

@@ -1,0 +1,49 @@
+﻿@using System.Security.Claims
+@inherits LayoutComponentBase
+
+<div class="page">
+    <div class="sidebar">
+        <NavMenu />
+    </div>
+
+    <main>
+        <div class="top-row px-4">
+            @if(User is not null && User.Identity.IsAuthenticated)
+            {
+                @User.Identity.Name
+            }
+        </div>
+
+        <article class="content px-4">
+            @Body
+        </article>
+    </main>
+</div>
+
+<div id="blazor-error-ui">
+    An unhandled error has occurred.
+    <a href="" class="reload">Reload</a>
+    <a class="dismiss">🗙</a>
+</div>
+@inject AuthenticationStateProvider Provider
+@inject NavigationManager Navigation
+@code{
+    ClaimsPrincipal? User{ get; set; }
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        if (firstRender)
+        {
+            var state= await Provider.GetAuthenticationStateAsync();
+            User = state.User;
+
+            if (!User.Identity.IsAuthenticated)
+            {
+                Navigation.NavigateTo("/login");
+            }
+            else
+            {
+                StateHasChanged();
+            }
+        }
+    }
+}

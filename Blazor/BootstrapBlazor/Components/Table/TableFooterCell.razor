@@ -1,0 +1,13 @@
+﻿@namespace BootstrapBlazor.Components
+@inherits BootstrapComponentBase
+
+@if (IsMobileMode)
+{
+    <div @attributes="@AdditionalAttributes" class="@ClassString">@_value</div>
+}
+else
+{
+    <td @attributes="@AdditionalAttributes">
+        <div class="@ClassString">@_value</div>
+    </td>
+}

@@ -1,0 +1,43 @@
+﻿@namespace BootstrapBlazor.Components
+@typeparam TValue
+@inherits ValidateBase<TValue>
+
+@if (IsShowLabel)
+{
+    <BootstrapLabel required="@Required" for="@Id" ShowLabelTooltip="ShowLabelTooltip" Value="@DisplayText" />
+}
+@if(InputGroup == null)
+{
+    @RenderCheckbox
+}
+else
+{
+    <div class="form-control">
+        @RenderCheckbox
+    </div>
+}
+
+@code {
+    Microsoft.AspNetCore.Components.RenderFragment RenderCheckbox =>
+    @<div @attributes="AdditionalAttributes" class="@ClassString">
+        <DynamicElement TagName="input" class="@InputClassString" type="checkbox" id="@Id" disabled="@Disabled" checked="@CheckedString" TriggerClick="!IsDisabled" OnClick="OnToggleClick" StopPropagation="StopPropagation" />
+        @if (IsShowAfterLabel)
+        {
+            @RenderLabel
+        }
+    </div>;
+
+    Microsoft.AspNetCore.Components.RenderFragment RenderLabel =>
+    @<label class="form-check-label" for="@Id">
+        @if(ShowLabelTooltip is true)
+        {
+            <Tooltip Title="@DisplayText">
+                @DisplayText
+            </Tooltip>
+        }
+        else
+        {
+            @DisplayText
+        }
+    </label>;
+}

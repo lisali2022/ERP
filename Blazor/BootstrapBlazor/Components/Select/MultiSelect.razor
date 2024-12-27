@@ -1,0 +1,90 @@
+﻿@namespace BootstrapBlazor.Components
+@typeparam TValue
+@inherits SelectBase<TValue>
+@attribute [BootstrapModuleAutoLoader("Select/MultiSelect.razor.js", JSObjectReference = true)]
+
+@if (IsShowLabel)
+{
+    <BootstrapLabel required="@Required" for="@Id" ShowLabelTooltip="ShowLabelTooltip" Value="@DisplayText"></BootstrapLabel>
+}
+<div @attributes="@AdditionalAttributes" class="@ClassString" id="@Id">
+    <div class="@ToggleClassString" data-bs-toggle="@ToggleString" data-bs-placement="@PlacementString" data-bs-offset="@OffsetString" data-bs-auto-close="outside" data-bs-custom-class="@CustomClassString" tabindex="0">
+        <div class="@PlaceHolderClassString">@PlaceHolder</div>
+        <div class="multi-select-items">
+            @foreach (var item in SelectedItems)
+            {
+                @if (ShowCloseButton)
+                {
+                    <div class="multi-select-item-group">
+                        <DynamicElement TagName="span" class="multi-select-close" data-bb-val="@GetValueString(item)"
+                                        TriggerClick="@(!IsPopover)" OnClick="() => ToggleRow(item.Value)">
+                            <i class="@ClearIcon"></i>
+                        </DynamicElement>
+                        <span class="multi-select-item">@item.Text</span>
+                    </div>
+                }
+                else
+                {
+                    <span class="multi-select-item">@item.Text</span>
+                }
+            }
+        </div>
+    </div>
+    <div class="dropdown-menu">
+        @if (ShowSearch)
+        {
+            <div class="search">
+                <input type="text" class="form-control" @bind="@SearchText" @bind:event="oninput" />
+                <i class="@SearchIconString"></i>
+            </div>
+        }
+        @if (ShowToolbar)
+        {
+            <div class="toolbar">
+                @if (ShowDefaultButtons)
+                {
+                    <DynamicElement TagName="button" type="button" class="btn" OnClick="SelectAll">@SelectAllText</DynamicElement>
+                    <DynamicElement TagName="button" type="button" class="btn" OnClick="InvertSelect">@ReverseSelectText</DynamicElement>
+                    <DynamicElement TagName="button" type="button" class="btn" OnClick="Clear">@ClearText</DynamicElement>
+                }
+                @ButtonTemplate
+            </div>
+        }
+        @foreach (var itemGroup in GetData().GroupBy(i => i.GroupName))
+        {
+            if (!string.IsNullOrEmpty(itemGroup.Key))
+            {
+                if (GroupItemTemplate != null)
+                {
+                    @GroupItemTemplate(itemGroup.Key)
+                }
+                else
+                {
+                    <Divider Text="@itemGroup.Key" />
+                }
+            }
+            @foreach (var item in itemGroup)
+            {
+                <DynamicElement OnClick="() => ToggleRow(item.Value)" TriggerClick="@CheckCanTrigger(item)" class="@GetItemClassString(item)">
+                    <div class="multi-select-item">
+                        <div class="form-check">
+                            <input class="form-check-input" type="checkbox" disabled="@CheckCanSelect(item)" checked="@GetCheckedString(item)" />
+                        </div>
+                        @if (ItemTemplate != null)
+                        {
+                            @ItemTemplate(item)
+                        }
+                        else if (IsMarkupString)
+                        {
+                            @((MarkupString)item.Text)
+                        }
+                        else
+                        {
+                            <span>@item.Text</span>
+                        }
+                    </div>
+                </DynamicElement>
+            }
+        }
+    </div>
+</div>

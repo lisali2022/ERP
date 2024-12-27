@@ -1,0 +1,39 @@
+﻿@inject IHostEnvironment Env
+@inject IStringLocalizer<App> Localizer
+
+<!DOCTYPE html>
+<html lang="en" data-bs-theme='light'>
+
+<head>
+    <meta charset="utf-8" />
+    <meta http-equiv="content-type" content="text/html; charset=UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /> 
+    <title>ERP</title>
+    <link rel="icon" href="favicon.ico" type="image/x-icon">
+    <link rel="shortcut icon" href="favicon.ico" type="image/x-icon">
+    <link rel="apple-touch-icon" href="favicon.png">
+    <base href="/" />
+    <Link Href="_content/BootstrapBlazor.FontAwesome/css/font-awesome.min.css" />
+    <Link Href="_content/BootstrapBlazor/css/bootstrap.blazor.bundle.min.css" />
+    <Link Href="BootstrapBlazor.OnlyServer.styles.css" />
+
+    <link rel="stylesheet" href="https://blazor.cdn.telerik.com/blazor/5.1.1/kendo-theme-default/swatches/default-ocean-blue.css" />
+    <link rel="stylesheet" href="https://blazor.cdn.telerik.com/blazor/5.1.1/kendo-font-icons/font-icons.css" />
+    <script src="https://blazor.cdn.telerik.com/blazor/5.1.1/telerik-blazor.min.js" defer></script>
+
+
+
+    <Link Href="css/app.css" />
+  
+    <HeadOutlet @rendermode="new InteractiveServerRenderMode(false)" />
+</head>
+
+<body>
+    <Routes @rendermode="new InteractiveServerRenderMode(false)" />
+    <ReconnectorOutlet ReconnectInterval="5000" @rendermode="new InteractiveServerRenderMode(false)" />
+    <Script Src="_content/BootstrapBlazor/js/bootstrap.blazor.bundle.min.js"></Script>
+    <script src="_framework/blazor.web.js"></script>
+</body>
+
+</html>

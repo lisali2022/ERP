@@ -1,0 +1,44 @@
+﻿@page "/login"
+@using OneAuth.BlazorWebAssemblyDemo.Client.Models
+@layout Layout.EmptyLayout
+<div class="row col-3 offset-5">
+    <h1 class="text-center">
+        登录
+    </h1>
+    <EditForm Model="Model" OnValidSubmit="SubmitAsync"> 
+        <div class="col-12 mb-3">
+            <label class="form-label">用户名</label>
+            <InputText @bind-Value="Model.UserName" class="form-control" />
+        </div>
+        <div class="col-12 mb-3">
+            <label class="form-label">密码</label>
+            <InputText @bind-Value="Model.Password" class="form-control" />
+        </div>
+        <div class="col-12 mb-3">
+            <button class="btn btn-primary" type="submit">登录</button>
+        </div>
+    </EditForm>
+</div>
+
+@inject HttpClient Client
+@inject NavigationManager Navigator
+@inject Blazored.LocalStorage.ILocalStorageService LocalStorageService
+
+@code {
+    LoginViewModel Model { get; set; } = new LoginViewModel
+    {
+            UserName = "一剪梅大侠",
+            Password = "123456"
+        };
+
+    async Task SubmitAsync()
+    {
+
+        var response = await Client.PostAsJsonAsync("api/auth", Model);
+        response.EnsureSuccessStatusCode();
+
+        var token = await response.Content.ReadAsStringAsync();
+        await LocalStorageService.SetItemAsStringAsync("TOKEN", token);
+        Navigator.NavigateTo("/");
+    }
+}

@@ -1,0 +1,31 @@
+﻿@page "/sys/menu"
+@using Yi.Framework.Rbac.Application.Contracts.Dtos.Menu
+@inherits BootstrapComponentBase
+@inject IStringLocalizer<MenuGetListOutputDto> LocalizerMenuDto
+
+@inject ICacheManager CacheManager
+@attribute [TabItemOption(Text = "菜单管理")]
+<PageTitle>菜单管理</PageTitle>
+<div class="page-user">
+    <h5>菜单管理</h5>
+    @if(TreeItems !=null)
+    {
+        <Table TItem="MenuGetListOutputDto" IsBordered="true" IsStriped="true" ShowToolbar="true" ShowLineNo="true" ShowDefaultButtons="true" IsTree="true"
+                IsFixedHeader="true" IsFixedFooter="true"
+               Items="@TreeItems" TreeNodeConverter="@TreeNodeConverter" OnTreeExpand="@OnTreeExpand">
+            <TableColumns>
+                <TableColumn @bind-Field="@context.MenuName" Width="130" />              
+                <TableColumn @bind-Field="@context.OrderNum" Width="150" />
+                <TableColumn @bind-Field="@context.MenuType" Width="100" />
+                <TableColumn @bind-Field="@context.Url" Width="80" />
+                <TableColumn @bind-Field="@context.Icon" Width="180" />
+                <TableColumn @bind-Field="@context.Remark" Width="260" />
+                <TableColumn @bind-Field="@context.Component" Width="200" />
+                <TableColumn @bind-Field="@context.CreationTime" Width="160" />
+                <TableColumn @bind-Field="@context.ParentId" Width="330" />
+                <TableColumn @bind-Field="@context.Id"  />
+            </TableColumns>
+        </Table>
+    }
+
+</div>

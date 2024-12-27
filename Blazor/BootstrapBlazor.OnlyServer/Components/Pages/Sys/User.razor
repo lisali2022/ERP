@@ -1,0 +1,20 @@
+﻿@page "/sys/user"
+@using Telerik.Blazor.Services
+@using Yi.Framework.Rbac.Application.Contracts.Dtos.User
+@inject ITelerikStringLocalizer LocalizerTk
+@attribute [TabItemOption(Text = "用户管理")]
+<PageTitle>用户管理</PageTitle>
+<div class="page-user">
+    <h1>用户管理</h1>
+    <Table TItem="UserGetListOutputDto" IsPagination="true" PageItemsSource="@PageItemsSource" RenderMode="TableRenderMode.Table" IsFixedHeader="true" class="table-users"
+           IsStriped="true" IsBordered="true" OnQueryAsync="OnQueryAsync">
+        <TableColumns>
+            <TableColumn @bind-Field="@context.UserName" Width="100"/>
+            <TableColumn @bind-Field="@context.Name" Align="Alignment.Center" />
+            <TableColumn @bind-Field="@context.Nick" Align="Alignment.Center" />
+            <TableColumn @bind-Field="@context.Email" Align="Alignment.Center" Width="100" />
+            <TableColumn @bind-Field="@context.Phone" Align="Alignment.Center" />
+        </TableColumns>
+    </Table>
+</div>
+

@@ -1,0 +1,6 @@
+@OneAuth.WebApi_HostAddress = http://localhost:5236
+
+GET {{OneAuth.WebApi_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###

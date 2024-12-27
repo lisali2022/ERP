@@ -1,0 +1,23 @@
+﻿@inherits ComponentBase
+@namespace BootstrapBlazor.Components
+
+@RenderBody()
+
+<EyeDropper></EyeDropper>
+<FullScreen></FullScreen>
+<Clipboard></Clipboard>
+<Title></Title>
+
+<Message @ref="MessageContainer"></Message>
+<ToastContainer @ref="ToastContainer"></ToastContainer>
+
+<ResizeNotification></ResizeNotification>
+<BrowserFinger></BrowserFinger>
+<ConnectionHub></ConnectionHub>
+
+@code {
+    Microsoft.AspNetCore.Components.RenderFragment RenderChildContent =>
+    @<CascadingValue Value="this" IsFixed="true">
+        @ChildContent
+    </CascadingValue>;
+}

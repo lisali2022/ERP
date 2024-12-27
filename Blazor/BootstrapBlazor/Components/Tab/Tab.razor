@@ -1,0 +1,117 @@
+﻿@namespace BootstrapBlazor.Components
+@inherits BootstrapModuleComponentBase
+@attribute [BootstrapModuleAutoLoader(JSObjectReference = true)]
+
+@if (Excluded)
+{
+    @Body
+}
+else
+{
+    <div @attributes="@AdditionalAttributes" id="@Id" class="@ClassString" style="@StyleString">
+        <div class="tabs-header">
+            <div class="@WrapClassString">
+                <div class="nav-link-bar left" @onclick="@ClickPrevTab"><i class="@PreviousIcon"></i></div>
+                <div class="tabs-nav-scroll">
+                    <div role="tablist" class="tabs-nav">
+                        <CascadingValue Value="this" IsFixed="true">
+                            @ChildContent
+                        </CascadingValue>
+                        <RenderTemplate>
+                            @if (!Items.Any() && !string.IsNullOrEmpty(DefaultUrl))
+                            {
+                                AddTabItem(DefaultUrl);
+                            }
+                            @if (FirstRender)
+                            {
+                                if (!Items.Any(t => t.IsActive))
+                                {
+                                    Items.FirstOrDefault()?.SetActive(true);
+                                }
+                            }
+                            @foreach (var item in Items)
+                            {
+                                if (item.HeaderTemplate != null)
+                                {
+                                    @item.HeaderTemplate(item)
+                                }
+                                else
+                                {
+                                    <a @key="item" href="@item.Url" role="tab" tabindex="-1" class="@GetClassString(item)" @onclick="@(() => OnClickTabItem(item))" @onclick:preventDefault="@(!ClickTabToNavigation)" draggable="@DraggableString">
+                                        @if (!string.IsNullOrEmpty(item.Icon))
+                                        {
+                                            <i class="@GetIconClassString(item.Icon)"></i>
+                                        }
+                                        <span class="tabs-item-text">@item.Text</span>
+                                        @if (ShowFullScreen && item.ShowFullScreen)
+                                        {
+                                            <FullScreenButton TargetId="@GetIdByTabItem(item)"></FullScreenButton>
+                                        }
+                                        @if (ShowClose && item.Closable)
+                                        {
+                                            <span class="tabs-item-close" @onclick:stopPropagation @onclick:preventDefault @onclick="() => RemoveTab(item)">
+                                                <i class="@CloseIcon"></i>
+                                            </span>
+                                        }
+                                    </a>
+                                }
+                            }
+                            @if (IsCard || IsBorderCard)
+                            {
+                                <div class="tabs-item-fix"></div>
+                            }
+                        </RenderTemplate>
+                        @if (!IsCard && !IsBorderCard)
+                        {
+                            <div class="tabs-active-bar"></div>
+                        }
+                    </div>
+                </div>
+                @if (ButtonTemplate != null)
+                {
+                    @ButtonTemplate
+                }
+                <div class="nav-link-bar right" @onclick="@ClickNextTab"><i class="@NextIcon"></i></div>
+                @if (ShouldShowExtendButtons())
+                {
+                    <div class="nav-link-bar dropdown dropdown-toggle" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                        <div class="nav-link-close"><i class="@DropdownIcon"></i></div>
+                    </div>
+                    <div class="dropdown-menu dropdown-menu-end shadow">
+                        <div class="dropdown-item" @onclick="@CloseCurrentTab"><span>@CloseCurrentTabText</span></div>
+                        <div class="dropdown-item" @onclick="@OnClickCloseOtherTabs"><span>@CloseOtherTabsText</span></div>
+                        <div class="dropdown-item" @onclick="@OnClickCloseAllTabs"><span>@CloseAllTabsText</span></div>
+                    </div>
+                }
+            </div>
+        </div>
+        <div class="tabs-body">
+            <CascadingValue Value="this" IsFixed="true">
+                @if (IsOnlyRenderActiveTab)
+                {
+                    var item = Items.FirstOrDefault(i => i.IsActive);
+                    if (item != null)
+                    {
+                        @RenderTabItem(item)
+                    }
+                }
+                else
+                {
+                    foreach (var item in Items)
+                    {
+                        <div @key="@item" class="@GetContentClassString(item)" id="@GetIdByTabItem(item)">
+                            @RenderTabItem(item)
+                        </div>
+                    }
+                }
+            </CascadingValue>
+        </div>
+    </div>
+}
+
+@code {
+    Microsoft.AspNetCore.Components.RenderFragment<TabItem> RenderTabItem => item =>
+    @<CascadingValue Value="item" IsFixed="true">
+        @RenderTabItemContent(item)
+    </CascadingValue>;
+}

@@ -1,0 +1,94 @@
+﻿@namespace BootstrapBlazor.Components
+@typeparam TItem
+@inherits BootstrapModuleComponentBase
+@attribute [BootstrapModuleAutoLoader]
+
+@if (Items == null)
+{
+    if (ShowSkeleton)
+    {
+        <SkeletonTree AdditionalAttributes="AdditionalAttributes"></SkeletonTree>
+    }
+    else
+    {
+        <div class="@LoadingClassString">
+            <Spinner Color="Color.Primary" />
+        </div>
+    }
+}
+else
+{
+    <div @attributes="AdditionalAttributes" id="@Id" tabindex="0" class="@ClassString">
+        @if (ShowSearch)
+        {
+            @if (SearchTemplate == null)
+            {
+                <BootstrapInputGroup class="tree-search">
+                    <BootstrapInput @bind-Value="@_searchText" OnEnterAsync="@OnEnterAsync" OnEscAsync="@OnEscAsync" />
+                    @if (ShowResetSearchButton)
+                    {
+                        <Button Icon="@ClearSearchIcon" OnClickWithoutRender="OnClickResetSearch" class="tree-search-reset"></Button>
+                    }
+                    <Button Icon="@SearchIcon" OnClickWithoutRender="OnClickSearch"></Button>
+                </BootstrapInputGroup>
+            }
+            else
+            {
+                @SearchTemplate
+            }
+        }
+        <ul class="tree-root">
+            @foreach (var item in Items)
+            {
+                @RenderTreeItem(item)
+            }
+        </ul>
+    </div>
+}
+
+@code {
+    private Microsoft.AspNetCore.Components.RenderFragment<TreeViewItem<TItem>> RenderTreeNode => item =>
+    @<ul class="@GetTreeClassString(item)">
+        @foreach (var node in item.Items)
+        {
+            @RenderTreeItem(node)
+        }
+    </ul>;
+
+    private Microsoft.AspNetCore.Components.RenderFragment<TreeViewItem<TItem>> RenderTreeItem => item =>
+    @<li class="@GetItemClassString(item)">
+        <div class="tree-content" @oncontextmenu="e => OnContextMenu(e, item)" @oncontextmenu:preventDefault="IsPreventDefault" @ontouchstart="e => OnTouchStart(e, item)" @ontouchend="OnTouchEnd">
+            <DynamicElement TagName="i" class="@GetCaretClassString(item)" TriggerClick="TriggerNodeArrow(item)"  OnClick="() => OnToggleNodeAsync(item, true)"></DynamicElement>
+            @if (ShowCheckbox)
+            {
+                <Checkbox Value="@item.CheckedState" IsDisabled="GetItemDisabledState(item)" SkipValidate="true"
+                          ShowLabel="false" ShowAfterLabel="false" @bind-State="@item.CheckedState"
+                          OnStateChanged="(state, v) => OnCheckStateChanged(item, true)" StopPropagation="true" />
+            }
+            <DynamicElement class="@GetNodeClassString(item)" TriggerClick="TriggerNodeLabel(item)" OnClick="() => OnClick(item)">
+                @if (ShowIcon)
+                {
+                    <i class="@GetIconClassString(item)"></i>
+                }
+                @if (item.Template == null)
+                {
+                    <span class="@item.CssClass">@item.Text</span>
+                }
+                else
+                {
+                    @item.Template(item.Value)
+                }
+            </DynamicElement>
+        </div>
+        @if (item.ShowLoading)
+        {
+            <ul class="tree-ul show">
+                <Spinner Size="Size.Small" Color="Color.Primary" />
+            </ul>
+        }
+        else if (item.Items.Any())
+        {
+            @RenderTreeNode(item)
+        }
+    </li>;
+}

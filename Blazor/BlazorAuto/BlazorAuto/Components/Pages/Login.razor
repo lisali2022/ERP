@@ -1,0 +1,41 @@
+﻿@page "/login"
+@using Newtonsoft.Json.Linq
+@using Blazor.Shared.Models
+@using System.Text.Json
+@using System.Text
+@using System.Text.Json.Nodes
+@using Microsoft.AspNetCore.Mvc.NewtonsoftJson
+@inject HttpClient Client
+@inject NavigationManager Navigator
+@inject Blazored.LocalStorage.ILocalStorageService LocalStorageService
+
+@layout Layout.EmptyLayout
+<div class="row col-3 offset-5">
+    <h1 class="text-center">
+        登录
+    </h1>
+      @* <EditForm Model="Model" OnValidSubmit="SubmitAsync">  *@
+    <form action="api/auth/sign-in?returnUrl=@ReturnUrl" method="post">
+        <div class="col-12 mb-3">
+            <label class="form-label">租户</label>
+            <input type="text" class="form-control" value="" name="Tenancy" />
+        </div>
+        <div class="col-12 mb-3">
+            <label class="form-label">用户名</label>
+            <input type="text" class="form-control" value="cc" name="UserName"/>
+        </div>
+        <div class="col-12 mb-3">
+            <label class="form-label">密码</label>
+            <input type="password" class="form-control" value="123456" name="Password" />
+        </div>
+        <div class="col-12 mb-3">
+            <button class="btn btn-primary" type="submit">登录</button>
+        </div>
+        <div>@msg</div>
+    </form>
+
+</div>
+
+@code{
+
+}

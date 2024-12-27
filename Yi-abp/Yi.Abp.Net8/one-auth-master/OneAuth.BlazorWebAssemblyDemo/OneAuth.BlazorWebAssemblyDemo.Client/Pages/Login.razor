@@ -1,0 +1,97 @@
+﻿@page "/login"
+@using OneAuth.BlazorWebAssemblyDemo.Client.Models
+@using System.Text
+@using System.Text.Json
+@layout Layout.EmptyLayout
+<div class="row col-3 offset-5">
+    <h1 class="text-center">
+        登录
+    </h1>
+    <EditForm Model="Model" OnValidSubmit="SubmitAsync"> 
+        <div class="col-12 mb-3">
+            <label class="form-label">用户名</label>
+            <InputText @bind-Value="Model.UserName" class="form-control" />
+        </div>
+        <div class="col-12 mb-3">
+            <label class="form-label">密码</label>
+            <InputText @bind-Value="Model.Password" class="form-control" />
+        </div>
+        <div class="col-12 mb-3">
+            <button class="btn btn-primary" type="submit">登录</button>
+        </div>
+    </EditForm>
+</div>
+
+@inject HttpClient Client
+@inject NavigationManager Navigator
+@inject Blazored.LocalStorage.ILocalStorageService LocalStorageService
+
+@code {
+    LoginViewModel Model { get; set; } = new LoginViewModel
+    {
+            UserName = "cc",
+            Password = "123456"
+    };
+
+    async Task SubmitAsync()
+    {
+        string accessToken = await GetDingTalkAccessTokenAsync();
+        string jsonString = JsonSerializer.Serialize(Model);
+        string url = "api/auth";
+        url = "http://localhost:19001/api/app/account/login";
+        url = "http://localhost:19001/api/app/account/captcha-image";
+        url = "https://oapi.dingtalk.com/gettoken?appkey=dingk1ijv6gjwuupzpft&appsecret=X_PIpWffCW1O7QmfaeLduwf2tdWVCrYRX93AUwYshzj9yez0bbeZQZEawtsyLOF8";
+        // var response = await Client.PostAsJsonAsync(url, Model);
+        // var response = await Client.PostAsJsonAsync(url, Model);
+        using (var client = new HttpClient())         
+        {           
+            
+            var data = new StringContent(jsonString, Encoding.UTF8, "application/json");
+            try
+            {
+                // HttpResponseMessage response = await client.PostAsync(url, data);
+
+                HttpResponseMessage response = await client.GetAsync(url);
+
+                response.EnsureSuccessStatusCode();     
+                var token = await response.Content.ReadAsStringAsync();
+                await LocalStorageService.SetItemAsStringAsync("TOKEN", token);
+                Navigator.NavigateTo("/");            
+            }
+            catch (HttpRequestException e)
+            {
+                Console.WriteLine("\nException Caught!");
+                Console.WriteLine("Message :{0} ", e.Message);
+            }
+
+
+        }
+    }
+
+    private async Task<string> GetDingTalkAccessTokenAsync()
+    {
+        var appId = "dingk1ijv6gjwuupzpft"; // 替换为你的AppKey
+        var appSecret = "X_PIpWffCW1O7QmfaeLduwf2tdWVCrYRX93AUwYshzj9yez0bbeZQZEawtsyLOF8"; // 替换为你的AppSecret
+        try
+        {
+            var response = await Client.GetAsync("https://oapi.dingtalk.com/gettoken?appkey=" + appId + "&appsecret=" + appSecret);
+            response.EnsureSuccessStatusCode();
+            var responseBody = await response.Content.ReadAsStringAsync();
+            // 这里需要解析responseBody来获取access_token，具体取决于钉钉API的返回格式
+            // 假设返回的是一个JSON对象，你可以使用System.Text.Json来反序列化它
+            // 下面是一个简化的示例，你需要根据实际情况进行调整
+            // var tokenResponse = System.Text.Json.JsonSerializer.Deserialize<TokenResponse>(responseBody);
+            // return tokenResponse?.access_token;
+
+            // 由于这是一个示例，我们直接返回一个假设的access_token
+            return "fake-access-token"; // 替换为实际的access_token
+        }
+        catch (HttpRequestException e)
+        {
+            Console.WriteLine("\nException Caught!");
+            Console.WriteLine("Message :{0} ", e.Message);
+            return "";
+        }
+       
+    }
+}
